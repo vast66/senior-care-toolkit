@@ -1086,6 +1086,24 @@ body{
   50%{transform:scale(1.05);box-shadow:0 12px 40px rgba(0,122,255,.4)}
   100%{transform:scale(1);box-shadow:0 8px 30px rgba(0,122,255,.3)}
 }
+
+/* AI Loading Spinner */
+.ai-spinner{
+  width:36px;height:36px;margin:0 auto;
+  border:3px solid rgba(255,255,255,.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* AI Result Page */
+.ai-result-content{
+  font-size:17px;line-height:1.8;color:var(--ios-label);
+  padding:0 20px;
+}
+.ai-result-content p{margin:0 0 12px}
+.ai-result-content strong{color:var(--ios-blue)}
 </style>
 </head>
 <body>
@@ -2135,11 +2153,11 @@ body{
             </div>
           </div>
           <div class="shutter-wrap">
-            <div class="shutter" onclick="go('med-result')" role="button" aria-label="拍照"></div>
+            <div class="shutter" onclick="medCameraShoot()" role="button" aria-label="拍照"></div>
             <span class="shutter-label">点击拍照</span>
           </div>
           <div class="divider-or" style="margin:16px 32px">或者</div>
-          <button class="btn-full outline" onclick="go('med-result')" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
+          <button class="btn-full outline" onclick="medCameraAlbum()" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
         </div>
       </div>
     </div>
@@ -2456,7 +2474,7 @@ body{
           <video id="fridgeCameraFeed" autoplay playsinline muted></video>
           <div class="camera-overlay">
             <div class="camera-hint">对准食品包装拍一张</div>
-            <button class="camera-btn" onclick="toast('正在识别食品…');setTimeout(()=>{toast('识别成功！已添加到冰箱');back()},2000)" aria-label="拍照"></button>
+            <button class="camera-btn" onclick="fridgeCameraShoot()" aria-label="拍照"></button>
           </div>
         </div>
       </div>
@@ -2649,10 +2667,10 @@ body{
           </p>
           <textarea class="text-input" aria-label="粘贴内容" placeholder="在这里粘贴短信、微信聊天内容...&#10;&#10;例如：&#10;您的医保卡异常，请点击链接...">您的医保卡异常，请点击链接填写银行卡和验证码，否则账户将被冻结。</textarea>
 
-          <button class="btn-full blue" onclick="go('scam-result')" style="margin-top:16px"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></span> 帮我判断</button>
+          <button class="btn-full blue" onclick="scamAnalyzeText()" style="margin-top:16px"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></span> 帮我判断</button>
 
           <div class="btn-group" style="margin-top:12px">
-            <button class="btn-action"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><path d="M3 7h2l2-2h10l2 2h2a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"/><circle cx="12" cy="13" r="4"/></svg></span> 上传聊天截图</button>
+            <button class="btn-action" onclick="scamUploadScreenshot()"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><path d="M3 7h2l2-2h10l2 2h2a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"/><circle cx="12" cy="13" r="4"/></svg></span> 上传聊天截图</button>
             <button class="btn-action"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11c0 3.9 3.1 7 7 7s7-3.1 7-7"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></span> 语音描述</button>
           </div>
         </div>
@@ -2733,7 +2751,7 @@ body{
             <p style="font-size:16px;color:var(--ios-secondary-label);line-height:1.5;margin:0 0 12px">
               对准保健品瓶身的<strong>配料表</strong>或<strong>成分说明</strong>拍照，AI帮你分析成分是否靠谱。
             </p>
-            <button class="btn-full blue" onclick="go('supplement-result-photo')" style="margin-top:0;background:#9C27B0">
+            <button class="btn-full blue" onclick="supplementCameraShoot()" style="margin-top:0;background:#9C27B0">
               <span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><path d="M3 7h2l2-2h10l2 2h2a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"/><circle cx="12" cy="13" r="4"/></svg></span> 拍照识别配料表
             </button>
           </div>
@@ -2750,7 +2768,7 @@ body{
             <textarea class="text-input" aria-label="输入销售话术" placeholder="在这里输入推销员说的话...&#10;&#10;例如：&#10;这个是纳米提纯技术，能治百病...&#10;吃三个月包好，不用吃药了..." style="min-height:100px">这个产品是航天员同款，能清除血管垃圾，三个月根治高血压，不用再吃降压药了。</textarea>
 
             <div class="btn-group" style="margin-top:12px">
-              <button class="btn-full blue" onclick="go('supplement-result-speech')" style="background:#9C27B0">
+              <button class="btn-full blue" onclick="supplementAnalyzeSpeech()" style="background:#9C27B0">
                 <span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></span> 帮我鉴别话术
               </button>
             </div>
@@ -2882,6 +2900,29 @@ body{
       </div>
     </div>
 
+    <!-- ==================== AI RESULT 通用AI识别结果页 ==================== -->
+    <div class="page" id="p-ai-result">
+      <div class="page-inner no-tab">
+        <div class="nav-bar">
+          <div class="nav-bar-content">
+            <button class="nav-back" onclick="back()" aria-label="返回">
+              <span class="nav-back-chevron">‹</span> 返回
+            </button>
+            <div class="nav-bar-title">AI识别结果</div>
+          </div>
+        </div>
+        <div class="section" style="padding-top:14px">
+          <div class="ai-result-content">
+            <p style="color:var(--ios-tertiary-label);text-align:center">等待识别...</p>
+          </div>
+          <div class="btn-group" style="margin-top:24px">
+            <button class="btn-action" onclick="back()"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1018 0 9 9 0 00-15-6.7"/><path d="M3 3v6h6"/></svg></span> 再识别一次</button>
+            <button class="btn-action subtle" onclick="go('home')"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg></span> 返回首页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== READING ==================== -->
     <div class="page" id="p-reading">
       <div class="page-inner no-tab">
@@ -2967,11 +3008,11 @@ body{
             </div>
           </div>
           <div class="shutter-wrap">
-            <div class="shutter" onclick="go('ocr-result')" role="button" aria-label="拍照"></div>
+            <div class="shutter" onclick="ocrCameraShoot()" role="button" aria-label="拍照"></div>
             <span class="shutter-label">点击拍照</span>
           </div>
           <div class="divider-or" style="margin:16px 32px">或者</div>
-          <button class="btn-full outline" onclick="go('ocr-result')" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
+          <button class="btn-full outline" onclick="ocrCameraAlbum()" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
         </div>
       </div>
     </div>
@@ -3058,13 +3099,13 @@ body{
             </div>
           </div>
           <div class="shutter-wrap">
-            <div class="shutter" onclick="toast('正在识别花卉…')" role="button" aria-label="拍照" style="border-color:var(--ios-green)">
+            <div class="shutter" onclick="plantCameraShoot()" role="button" aria-label="拍照" style="border-color:var(--ios-green)">
               <div style="width:54px;height:54px;border-radius:50%;background:var(--ios-green)"></div>
             </div>
             <span class="shutter-label">点击拍照</span>
           </div>
           <div class="divider-or" style="margin:16px 32px">或者</div>
-          <button class="btn-full outline" onclick="toast('正在从相册选取…')" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
+          <button class="btn-full outline" onclick="plantCameraAlbum()" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
         </div>
       </div>
     </div>
@@ -3113,13 +3154,13 @@ body{
             </div>
           </div>
           <div class="shutter-wrap">
-            <div class="shutter" onclick="toast('正在识别家电…')" role="button" aria-label="拍照" style="border-color:var(--ios-orange)">
+            <div class="shutter" onclick="energyCameraShoot()" role="button" aria-label="拍照" style="border-color:var(--ios-orange)">
               <div style="width:54px;height:54px;border-radius:50%;background:var(--ios-orange)"></div>
             </div>
             <span class="shutter-label">点击拍照</span>
           </div>
           <div class="divider-or" style="margin:16px 32px">或者</div>
-          <button class="btn-full outline" onclick="toast('正在从相册选取…')" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
+          <button class="btn-full outline" onclick="energyCameraAlbum()" aria-label="从相册选"><span class="sf-icon" style="font-size:17px"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="10.5" r="2.5"/><path d="M22 15l-5-5L6 20"/></svg></span> 从相册选一张</button>
         </div>
       </div>
     </div>
@@ -3452,6 +3493,12 @@ body{
             <div class="ios-row" role="button" onclick="go('voice-settings')">
               <span class="ios-row-icon"><span class="sf-icon" style="font-size:16px;color:var(--ios-teal)"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a4 4 0 010 7"/><path d="M18 6a8 8 0 010 12"/></svg></span></span>
               <div class="ios-row-body"><div class="ios-row-title">语音设置</div></div>
+              <span class="ios-chevron">›</span>
+            </div>
+            <div class="ios-row" role="button" onclick="showApiKeyDialog()">
+              <span class="ios-row-icon"><span class="sf-icon" style="font-size:16px;color:#9C27B0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span></span>
+              <div class="ios-row-body"><div class="ios-row-title">AI识别设置</div></div>
+              <span class="ios-row-detail" id="aiKeyStatus"></span>
               <span class="ios-chevron">›</span>
             </div>
           </div>
@@ -4604,8 +4651,428 @@ function setFontSize(size, row){
   toast('字体已调整为' + row.querySelector('.ios-row-title').textContent);
 }
 
+/* ==========================================
+   AI Vision — 真实拍照识别模块
+   ========================================== */
+const AIVision = {
+  // 配置 - 使用 SiliconFlow 免费 API (国内可访问)
+  // 用户也可以在设置中配置自己的 API
+  config: JSON.parse(localStorage.getItem('ai_config') || 'null') || {
+    apiUrl: 'https://api.siliconflow.cn/v1/chat/completions',
+    apiKey: '',
+    model: 'Qwen/Qwen2.5-VL-7B-Instruct'
+  },
+
+  saveConfig() {
+    localStorage.setItem('ai_config', JSON.stringify(this.config));
+  },
+
+  // 隐藏的 file input
+  _fileInput: null,
+  _getFileInput() {
+    if (!this._fileInput) {
+      const inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'image/*';
+      inp.style.display = 'none';
+      document.body.appendChild(inp);
+      this._fileInput = inp;
+    }
+    return this._fileInput;
+  },
+
+  // 拍照（调用系统相机）
+  takePhoto() {
+    return new Promise((resolve, reject) => {
+      const inp = this._getFileInput();
+      inp.setAttribute('capture', 'environment');
+      inp.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) resolve(file);
+        else reject(new Error('未选择图片'));
+        inp.value = '';
+      };
+      inp.click();
+    });
+  },
+
+  // 从相册选
+  pickFromAlbum() {
+    return new Promise((resolve, reject) => {
+      const inp = this._getFileInput();
+      inp.removeAttribute('capture');
+      inp.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) resolve(file);
+        else reject(new Error('未选择图片'));
+        inp.value = '';
+      };
+      inp.click();
+    });
+  },
+
+  // 图片文件转 base64
+  fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  },
+
+  // 压缩图片到合理大小（避免API超限）
+  async compressImage(file, maxWidth = 1024) {
+    const dataUrl = await this.fileToBase64(file);
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.src = dataUrl;
+    });
+  },
+
+  // 调用 AI Vision API
+  async analyze(imageBase64, prompt) {
+    if (!this.config.apiKey) {
+      throw new Error('NO_KEY');
+    }
+    const body = {
+      model: this.config.model,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image_url', image_url: { url: imageBase64 } },
+          { type: 'text', text: prompt }
+        ]
+      }],
+      max_tokens: 1500,
+      temperature: 0.3
+    };
+
+    const resp = await fetch(this.config.apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.config.apiKey
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('API错误(' + resp.status + '): ' + errText.substring(0, 100));
+    }
+    const data = await resp.json();
+    return data.choices[0].message.content;
+  },
+
+  // 分析文本内容（非图片，用于话术/短信诈骗分析）
+  async analyzeText(text, prompt) {
+    if (!this.config.apiKey) {
+      throw new Error('NO_KEY');
+    }
+    const body = {
+      model: this.config.model.replace('-VL', ''),
+      messages: [{
+        role: 'user',
+        content: prompt + '\n\n以下是需要分析的内容：\n' + text
+      }],
+      max_tokens: 1500,
+      temperature: 0.3
+    };
+
+    // Fallback: 如果非VL模型不可用，仍用VL模型
+    const resp = await fetch(this.config.apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.config.apiKey
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      // 尝试用VL模型
+      body.model = this.config.model;
+      const resp2 = await fetch(this.config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.config.apiKey
+        },
+        body: JSON.stringify(body)
+      });
+      if (!resp2.ok) throw new Error('API错误');
+      const data2 = await resp2.json();
+      return data2.choices[0].message.content;
+    }
+    const data = await resp.json();
+    return data.choices[0].message.content;
+  },
+
+  // 展示结果到通用结果页
+  showResult(title, content, pageId) {
+    const page = document.getElementById('p-' + pageId);
+    if (!page) return;
+    const resultArea = page.querySelector('.ai-result-content');
+    if (resultArea) {
+      resultArea.innerHTML = this._formatMarkdown(content);
+    }
+    go(pageId);
+  },
+
+  // 简单 markdown 转 HTML
+  _formatMarkdown(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>')
+      .replace(/⚠️/g, '<span style="color:var(--ios-orange)">⚠️</span>')
+      .replace(/❌/g, '<span style="color:var(--ios-red)">❌</span>')
+      .replace(/✅/g, '<span style="color:var(--ios-green)">✅</span>');
+  }
+};
+
+// ========== 各功能的拍照识别处理 ==========
+
+// 通用的拍照识别流程
+async function aiCameraAction(mode, promptText, resultPageId) {
+  // 检查API Key
+  if (!AIVision.config.apiKey) {
+    showApiKeyDialog();
+    return;
+  }
+
+  let file;
+  try {
+    if (mode === 'camera') {
+      file = await AIVision.takePhoto();
+    } else {
+      file = await AIVision.pickFromAlbum();
+    }
+  } catch(e) {
+    return; // 用户取消
+  }
+
+  // 显示加载状态
+  showLoading('正在AI识别中…');
+
+  try {
+    const base64 = await AIVision.compressImage(file);
+    const result = await AIVision.analyze(base64, promptText);
+    hideLoading();
+    AIVision.showResult('识别结果', result, resultPageId);
+  } catch(e) {
+    hideLoading();
+    if (e.message === 'NO_KEY') {
+      showApiKeyDialog();
+    } else {
+      toast('识别失败：' + e.message);
+    }
+  }
+}
+
+// 用药助手 — 拍照识别药品
+function medCameraShoot() {
+  aiCameraAction('camera',
+    '你是一个药品识别助手。请识别图片中的药品，告诉我：\n1. 药品名称\n2. 主要成分\n3. 适应症（治什么病）\n4. 用法用量（每次吃几片、一天几次、饭前还是饭后）\n5. 注意事项（老年人需要特别注意什么）\n请用简洁易懂的中文回答，适合老年人阅读。',
+    'ai-result');
+}
+function medCameraAlbum() {
+  aiCameraAction('album',
+    '你是一个药品识别助手。请识别图片中的药品，告诉我：\n1. 药品名称\n2. 主要成分\n3. 适应症（治什么病）\n4. 用法用量（每次吃几片、一天几次、饭前还是饭后）\n5. 注意事项（老年人需要特别注意什么）\n请用简洁易懂的中文回答，适合老年人阅读。',
+    'ai-result');
+}
+
+// 冰箱助手 — 拍照识别食品
+function fridgeCameraShoot() {
+  aiCameraAction('camera',
+    '你是一个食品保质期助手。请识别图片中的食品/食品包装，告诉我：\n1. 食品名称\n2. 保质期（如果能看到生产日期或保质期）\n3. 建议存储方式（冷藏/冷冻/常温）\n4. 如何判断是否变质\n5. 推荐做法（1-2个简单菜谱）\n请用简洁易懂的中文回答，适合老年人阅读。',
+    'ai-result');
+}
+
+// 图片读字(OCR) — 拍照识别文字
+function ocrCameraShoot() {
+  aiCameraAction('camera',
+    '请仔细识别图片中的所有文字内容，按照原始排版格式输出。如果是药品说明书，请重点标注用法用量。如果是通知公告，请提取关键信息。输出纯文字即可。',
+    'ai-result');
+}
+function ocrCameraAlbum() {
+  aiCameraAction('album',
+    '请仔细识别图片中的所有文字内容，按照原始排版格式输出。如果是药品说明书，请重点标注用法用量。如果是通知公告，请提取关键信息。输出纯文字即可。',
+    'ai-result');
+}
+
+// 浇花助手 — 拍照识花
+function plantCameraShoot() {
+  aiCameraAction('camera',
+    '你是一个植物识别专家。请识别图片中的植物，告诉我：\n1. 植物名称（中文常用名）\n2. 品种特征\n3. 浇水频率（几天浇一次）\n4. 光照需求（喜阴/喜阳/散光）\n5. 养护要点（施肥、修剪、常见病虫害）\n请用简洁易懂的中文回答，适合老年人阅读。',
+    'ai-result');
+}
+function plantCameraAlbum() {
+  aiCameraAction('album',
+    '你是一个植物识别专家。请识别图片中的植物，告诉我：\n1. 植物名称（中文常用名）\n2. 品种特征\n3. 浇水频率（几天浇一次）\n4. 光照需求（喜阴/喜阳/散光）\n5. 养护要点（施肥、修剪、常见病虫害）\n请用简洁易懂的中文回答，适合老年人阅读。',
+    'ai-result');
+}
+
+// 家电节能 — 拍照识别家电
+function energyCameraShoot() {
+  aiCameraAction('camera',
+    '你是一个家电节能顾问。请识别图片中的家电或铭牌，告诉我：\n1. 家电名称和大致型号\n2. 预估功率（瓦数）\n3. 每月大概耗电多少度\n4. 省电小技巧（3条）\n5. 如果是老旧电器，是否建议更换节能型号\n请用简洁易懂的中文回答，适合老年人阅读。每度电按0.6元计算费用。',
+    'ai-result');
+}
+function energyCameraAlbum() {
+  aiCameraAction('album',
+    '你是一个家电节能顾问。请识别图片中的家电或铭牌，告诉我：\n1. 家电名称和大致型号\n2. 预估功率（瓦数）\n3. 每月大概耗电多少度\n4. 省电小技巧（3条）\n5. 如果是老旧电器，是否建议更换节能型号\n请用简洁易懂的中文回答，适合老年人阅读。每度电按0.6元计算费用。',
+    'ai-result');
+}
+
+// 保健品鉴别 — 拍配料表
+function supplementCameraShoot() {
+  aiCameraAction('camera',
+    '你是一个保健品安全鉴别专家。请分析图片中的保健品配料表/成分表，告诉我：\n1. 这个产品是否正规？有没有"蓝帽子"标志？\n2. 成分是否安全？有没有伪科学概念（如纳米、量子等）？\n3. 有没有违禁或可疑添加物？\n4. 宣称的功效是否合理？保健品能不能治病？\n5. 综合风险评估：安全/可疑/高风险\n6. 建议：该不该吃？需要注意什么？\n请用简洁易懂的中文回答，适合老年人阅读。如果判定有风险，请明确告知"不要吃"。',
+    'ai-result');
+}
+
+// 防诈骗 — 上传聊天截图
+function scamUploadScreenshot() {
+  aiCameraAction('album',
+    '你是一个反诈骗专家。请分析图片中的聊天截图/短信内容，判断：\n1. 风险等级：安全/低风险/高风险\n2. 如果有风险，属于哪种诈骗类型？（冒充客服/杀猪盘/刷单/投资/冒充公检法等）\n3. 哪些关键词/特征暴露了骗局？\n4. 应该怎么做？（不回复/不点链接/不转账/报警等）\n请用简洁明确的中文回答，适合老年人理解。如果是诈骗，请用⚠️高风险！开头，让老人一眼看到危险。',
+    'ai-result');
+}
+
+// 防诈骗 — 文本分析
+async function scamAnalyzeText() {
+  const textarea = document.querySelector('#p-scam-input .text-input');
+  const text = textarea ? textarea.value.trim() : '';
+  if (!text) { toast('请先输入或粘贴内容'); return; }
+  if (!AIVision.config.apiKey) { showApiKeyDialog(); return; }
+
+  showLoading('正在AI分析中…');
+  try {
+    const result = await AIVision.analyzeText(text,
+      '你是一个反诈骗专家。请分析以下短信/聊天内容，判断是否为诈骗：\n1. 风险等级：安全/低风险/高风险\n2. 如果有风险，属于哪种诈骗类型？\n3. 哪些关键词暴露了骗局？\n4. 应该怎么做？\n请用简洁明确的中文回答，适合老年人理解。如果是诈骗，请用⚠️开头明确告知。');
+    hideLoading();
+    AIVision.showResult('检测结果', result, 'ai-result');
+  } catch(e) {
+    hideLoading();
+    if (e.message === 'NO_KEY') showApiKeyDialog();
+    else toast('分析失败：' + e.message);
+  }
+}
+
+// 保健品 — 话术分析
+async function supplementAnalyzeSpeech() {
+  const textarea = document.querySelector('#p-supplement-input .text-input');
+  const text = textarea ? textarea.value.trim() : '';
+  if (!text) { toast('请先输入推销员的话'); return; }
+  if (!AIVision.config.apiKey) { showApiKeyDialog(); return; }
+
+  showLoading('正在AI鉴别中…');
+  try {
+    const result = await AIVision.analyzeText(text,
+      '你是一个保健品反欺诈专家。请分析以下保健品推销话术，判断：\n1. 风险等级：正常宣传/夸大宣传/涉嫌欺诈\n2. 话术中有哪些骗局特征？（虚假背书/夸大疗效/诱导停药/制造紧迫感等）\n3. 逐句拆解骗术要点\n4. 防骗建议\n请用简洁明确的中文回答，适合老年人理解。如果是骗局，请明确告知"这是骗人的！千万别买！"');
+    hideLoading();
+    AIVision.showResult('鉴别结果', result, 'ai-result');
+  } catch(e) {
+    hideLoading();
+    if (e.message === 'NO_KEY') showApiKeyDialog();
+    else toast('分析失败：' + e.message);
+  }
+}
+
+// ========== Loading 状态 ==========
+function showLoading(text) {
+  let el = document.getElementById('aiLoadingOverlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'aiLoadingOverlay';
+    el.innerHTML = `
+      <div style="background:rgba(0,0,0,.7);color:#fff;padding:24px 32px;border-radius:16px;text-align:center;font-size:18px;max-width:260px">
+        <div style="margin-bottom:12px"><div class="ai-spinner"></div></div>
+        <div class="ai-loading-text"></div>
+      </div>`;
+    el.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3)';
+    document.body.appendChild(el);
+  }
+  el.querySelector('.ai-loading-text').textContent = text || '正在识别…';
+  el.style.display = 'flex';
+}
+function hideLoading() {
+  const el = document.getElementById('aiLoadingOverlay');
+  if (el) el.style.display = 'none';
+}
+
+// ========== API Key 配置弹窗 ==========
+function showApiKeyDialog() {
+  let el = document.getElementById('apiKeyDialog');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'apiKeyDialog';
+    el.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);padding:20px';
+    el.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px;box-shadow:0 10px 40px rgba(0,0,0,.2)">
+        <h3 style="margin:0 0 8px;font-size:20px;color:#000">🔑 配置AI识别</h3>
+        <p style="margin:0 0 16px;font-size:15px;color:#666;line-height:1.5">
+          需要一个AI API Key才能使用识别功能。<br>
+          推荐使用 <a href="https://cloud.siliconflow.cn" target="_blank" style="color:var(--ios-blue)">硅基流动</a>（注册送免费额度）
+        </p>
+        <label style="font-size:14px;color:#666;display:block;margin-bottom:4px">API 地址</label>
+        <input id="aiApiUrl" type="url" value="${AIVision.config.apiUrl}" 
+          style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;margin-bottom:12px;box-sizing:border-box"
+          placeholder="https://api.siliconflow.cn/v1/chat/completions">
+        <label style="font-size:14px;color:#666;display:block;margin-bottom:4px">API Key</label>
+        <input id="aiApiKey" type="password" value="${AIVision.config.apiKey}" 
+          style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;margin-bottom:12px;box-sizing:border-box"
+          placeholder="sk-...">
+        <label style="font-size:14px;color:#666;display:block;margin-bottom:4px">模型</label>
+        <select id="aiModel" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;margin-bottom:16px;box-sizing:border-box;background:#fff">
+          <option value="Qwen/Qwen2.5-VL-7B-Instruct">Qwen2.5-VL-7B（免费）</option>
+          <option value="Pro/Qwen/Qwen2.5-VL-7B-Instruct">Qwen2.5-VL-7B Pro</option>
+          <option value="Qwen/Qwen2-VL-72B-Instruct">Qwen2-VL-72B（更强）</option>
+        </select>
+        <div style="display:flex;gap:10px">
+          <button onclick="closeApiKeyDialog()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;color:#666">取消</button>
+          <button onclick="saveApiKey()" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:16px;background:var(--ios-blue);color:#fff;font-weight:600">保存</button>
+        </div>
+      </div>`;
+    document.body.appendChild(el);
+  }
+  // 更新当前值
+  document.getElementById('aiApiUrl').value = AIVision.config.apiUrl;
+  document.getElementById('aiApiKey').value = AIVision.config.apiKey;
+  document.getElementById('aiModel').value = AIVision.config.model;
+  el.style.display = 'flex';
+}
+function closeApiKeyDialog() {
+  const el = document.getElementById('apiKeyDialog');
+  if (el) el.style.display = 'none';
+}
+function saveApiKey() {
+  AIVision.config.apiUrl = document.getElementById('aiApiUrl').value.trim();
+  AIVision.config.apiKey = document.getElementById('aiApiKey').value.trim();
+  AIVision.config.model = document.getElementById('aiModel').value;
+  AIVision.saveConfig();
+  closeApiKeyDialog();
+  toast('✅ AI配置已保存');
+}
+
 // Init
 syncTab('home');
+
+// Update AI key status
+const aiKeyEl = document.getElementById('aiKeyStatus');
+if (aiKeyEl) aiKeyEl.textContent = AIVision.config.apiKey ? '已配置' : '未配置';
 </script>
 
 </body>
