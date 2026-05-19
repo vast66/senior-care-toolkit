@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <title>安心助老工具包</title>
 <style>
 /* ============================================
@@ -96,6 +99,44 @@ body{
 .screen{
   width:100%;height:100%;
   position:relative;overflow:hidden;
+}
+
+/* =========== Mobile Real Device Adaptation =========== */
+@media screen and (max-width: 500px) {
+  body {
+    background: var(--ios-bg-primary);
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .phone {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .phone::before {
+    /* Hide fake Dynamic Island on real device */
+    display: none;
+  }
+  :root {
+    --ios-safe-top: env(safe-area-inset-top, 0px);
+    --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .page-inner {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .page-inner.no-tab {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .nav-bar {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .tab-bar {
+    height: calc(var(--ios-tab-height) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 /* =========== Page Layer =========== */
